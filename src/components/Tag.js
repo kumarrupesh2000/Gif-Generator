@@ -9,31 +9,27 @@ function Tag()
 
     const[gif,setGif]=useState('');
     const[loading,setLoading]=useState(false);
-    const[tag,setTag]=useState('')
+    const[tag,setTag]=useState('naruto')
 
 
     function changeHandler(event)
     {
         setTag(event.target.value);
     }
-    async function fetchData()
-    {
-
-        setLoading(true)
-        let output=await fetch(`https://api.giphy.com/v1/gifs/random?api_key=ct6jaNhbwnobinwIxrQJUvp2IwXsl7nB&tag=${tag}`)
-        let outputData=await output.json()
-        let imgURl=outputData.data.images.downsized_large.url;
+    async function fetchData(tag) {
+        setLoading(true);
+        let output = await fetch(`https://api.giphy.com/v1/gifs/random?api_key=ct6jaNhbwnobinwIxrQJUvp2IwXsl7nB&tag=${tag}`);
+        let outputData = await output.json();
+        let imgURl = outputData.data.images.downsized_large.url;
         setGif(imgURl);
         console.log(imgURl);
-        setLoading(false)
-
-
+        setLoading(false);
     }
-
-   
-    useEffect( () => {
-        fetchData();
-      },[])
+    
+    useEffect(() => {
+        fetchData(tag);
+    }, [tag, setGif, setLoading]);
+    
 
 
     return(
@@ -41,7 +37,7 @@ function Tag()
 
             <h1 className="text-2xl underline font-bold uppercase">Random {tag} Gif</h1>
             {loading ?  <div className="w-3/4 h-3/4 flex items-center justify-center"><Spinner /></div> :<img className=" w-3/4 h-2/4 object-cover" src={gif} alt="gifimg"></img>}
-            <input onChange={changeHandler} className="w-3/4 py-3 rounded-lg text-center"></input>
+            <input onChange={changeHandler} className="w-3/4 py-3 rounded-lg text-center uppercase font-bold" value={tag}></input>
             <button className="w-3/4 rounded-lg py-3 mb-3 bg-white hover:bg-slate-600 font-bold" onClick={()=>fetchData()}>Generate</button>
 
         </div>
